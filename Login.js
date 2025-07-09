@@ -8,6 +8,13 @@ const Login = () => {
 
   const handleLogin = () => {
     if (username) {
+      if (quizMode === 'new') {
+        localStorage.removeItem(`${username}_currentQuestion`);
+        localStorage.removeItem(`${username}_correctAnswers`);
+        localStorage.removeItem(`${username}_wrongAnswers`);
+        localStorage.removeItem(`${username}_answeredQuestions`);
+      }
+
       localStorage.setItem('username', username);
       navigate('/quiz');
     }
@@ -26,7 +33,7 @@ const Login = () => {
       {!quizMode && (
         <>
           <button onClick={() => setQuizMode('new')}>New Quiz</button>
-          <button onClick={() => setQuizMode('continue')}>Melanjutkan Kuis</button>
+          <button onClick={() => setQuizMode('continue')}>Continue Quiz</button>
         </>
       )}
 
@@ -42,12 +49,12 @@ const Login = () => {
           <button onClick={handleLogin}>Start Quiz</button>
 
           {quizMode === 'new' && (
-            <p style={{ fontSize: '14px', color: '#555', marginTop: '10px' }}>
+            <p style={{ fontSize: '12px', color: '#555', marginTop: '10px' }}>
               *Nama harus diingat untuk bisa melanjutkan Quiz bila meninggalkan/keluar/koneksi putus/tertutup di tengah pengerjaan.
             </p>
           )}
           {quizMode === 'continue' && (
-            <p style={{ fontSize: '14px', color: '#555', marginTop: '10px' }}>
+            <p style={{ fontSize: '12px', color: '#555', marginTop: '10px' }}>
               Harap masukkan nama pengguna yang sama seperti sebelumnya untuk melanjutkan kuis Anda!
             </p>
           )}
