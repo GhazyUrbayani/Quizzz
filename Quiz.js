@@ -34,7 +34,6 @@ const Quiz = () => {
 
   useEffect(() => {
     fetchQuestions().then(fetchedQuestions => {
-
       const decodedQuestions = fetchedQuestions.map(q => ({
         ...q,
         question: decodeHtmlEntities(q.question),
