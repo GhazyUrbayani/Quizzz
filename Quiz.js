@@ -3,8 +3,14 @@ import { fetchQuestions } from './api.js';
 import { useTimer } from './useTimer.js';
 import { useNavigate } from 'react-router-dom';
 
+const decodeHtmlEntities = (text) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(text, 'text/html');
+  return doc.documentElement.textContent;
+};
+
 const Quiz = () => {
-  const username = localStorage.getItem('username');  // Ambil nama pengguna dari localStorage
+  const username = localStorage.getItem('username');
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(() => {
     const savedQuestion = localStorage.getItem(`${username}_currentQuestion`);
@@ -27,10 +33,18 @@ const Quiz = () => {
   const timeLeft = useTimer(60, () => navigate('/result', { state: { correctAnswers, wrongAnswers, answeredQuestions, total: questions.length } }));
 
   useEffect(() => {
-    fetchQuestions().then(setQuestions);
+    fetchQuestions().then(fetchedQuestions => {
+
+      const decodedQuestions = fetchedQuestions.map(q => ({
+        ...q,
+        question: decodeHtmlEntities(q.question),
+        correct_answer: decodeHtmlEntities(q.correct_answer),
+        incorrect_answers: q.incorrect_answers.map(ans => decodeHtmlEntities(ans))
+      }));
+      setQuestions(decodedQuestions);
+    });
   }, []);
 
-  // Simpan progress kuis berdasarkan nama pengguna ke localStorage
   useEffect(() => {
     localStorage.setItem(`${username}_currentQuestion`, currentQuestion);
     localStorage.setItem(`${username}_correctAnswers`, correctAnswers);
@@ -49,7 +63,6 @@ const Quiz = () => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      // Hapus progress setelah kuis selesai
       localStorage.removeItem(`${username}_currentQuestion`);
       localStorage.removeItem(`${username}_correctAnswers`);
       localStorage.removeItem(`${username}_wrongAnswers`);
