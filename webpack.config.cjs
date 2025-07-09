@@ -1,16 +1,21 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './index.js',  // Path ke file index.js di root folder
+  entry: './index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',  // File output setelah bundling
+    filename: 'bundle.js',
+    publicPath: '/',
+  },
+  mode: 'production',
+  resolve: {
+    extensions: ['.js', '.jsx'],
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,  // Rule untuk file JavaScript/JSX
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
@@ -20,21 +25,22 @@ module.exports = {
         },
       },
       {
-        test: /\.css$/,  // Rule untuk file CSS
-        use: ['style-loader', 'css-loader'],  // Tambahkan loader untuk CSS
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './index.html',  // Path ke file index.html di root folder
+      template: './index.html',
     }),
   ],
   devServer: {
+    historyApiFallback: true,
     static: {
-      directory: path.resolve(__dirname, 'dist'),
+      directory: path.join(__dirname, './'),
     },
-    open: true,  // Buka browser otomatis
-    port: 3000,  // Port dev server
+    compress: true,
+    port: 3000,
   },
 };
