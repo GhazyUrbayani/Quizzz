@@ -7,8 +7,14 @@ const Login = () => {
 
   const handleLogin = () => {
     if (username) {
-      localStorage.setItem('username', username);  // Simpan nama pengguna di localStorage
+      localStorage.setItem('username', username);
       navigate('/quiz');
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleLogin();
     }
   };
 
@@ -19,9 +25,13 @@ const Login = () => {
         type="text"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
+        onKeyPress={handleKeyPress}
         placeholder="Enter your name"
       />
       <button onClick={handleLogin}>Start Quiz</button>
+      <p style={{ fontSize: '14px', color: '#555', marginTop: '10px' }}>
+        *Nama harus diingat untuk bisa melanjutkan Quiz bila meninggalkan/keluar/koneksi putus/tertutup di tengah pengerjaan.
+      </p>
     </div>
   );
 };
