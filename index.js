@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import Login from './Login.js';
 import Quiz from './Quiz.js';
 import Result from './Result.js';
-import './App.css';
+import './app.css';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
